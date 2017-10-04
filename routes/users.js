@@ -2,12 +2,14 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport')
 const jwt = require('jsonwebtoken')
-
+const config = require('../config/database')
 const User = require('../models/user')
+
+
 
 //Register a new user
 router.post('/register', (req, res, next) => {
-    console.log(req.params.name)
+    
     let newUser = new User({
         name: req.body.name,
         username: req.body.username,
@@ -24,13 +26,43 @@ router.post('/register', (req, res, next) => {
         
     })
 })
-//Authenticate a user
-router.get('/authenticate', (req, res, next) => {
-    res.send('authenticate')
+//Authenticate an user
+router.post('/authenticate', (req, res, next) => {
+    
+    const username = req.body.username
+    const password = req.body.password
+    User.getUserByUsername(username, (err, user) => {
+        if(err) throw err
+        if(!user){
+            return res.json({success:false, message: 'User not found'})
+        }
+
+        User.comparePassword(password,user.password, (err, isMatch) => {
+            if(err) throw err
+            if(isMatch){
+                const token = jwt.sign({data: user}, config.secret, {
+                    expiresIn: 604800 // 1 week
+                })
+                return res.json({
+                    success:true,
+                    token: "JWT "+token,
+                    user: {
+                        id:user._id,
+                        name: user.name,
+                        username: user.username,
+                        email:user.email,
+                    }
+                })
+            }else{
+                return res.json({success:false, message:'Wrong password'})
+            }
+        })
+
+    })
 })
 //Profile
-router.get('/authenticate', (req, res, next) => {
-    res.send('profile')
+router.get('/profile', passport.authenticate('jwt', {session:false}), (req, res, next) => {
+    res.json({user: req.user})
 })
 
 module.exports = router

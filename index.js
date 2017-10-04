@@ -22,8 +22,12 @@ app.use(cors())
 //set static folder
 app.use(express.static(path.join(__dirname, 'public')))
 //Body Parser Middleware
-app.use(bodyParser.urlencoded({ extended: false }))
+//app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+//Passport middleware
+app.use(passport.initialize())
+app.use(passport.session())
+require('./config/passport')(passport)
 
 app.use('/users', users)
 //Index route
