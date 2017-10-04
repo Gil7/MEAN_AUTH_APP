@@ -22,6 +22,7 @@ app.use(cors())
 //set static folder
 app.use(express.static(path.join(__dirname, 'public')))
 //Body Parser Middleware
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.use('/users', users)
