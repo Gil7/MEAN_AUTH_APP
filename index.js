@@ -34,6 +34,9 @@ app.use('/users', users)
 app.get('/', (req, res) => {
     res.send('Invalid endpoint')
 })
+app.get('*', (req, res) => {
+    res.redirect('/')
+})
 //Start server 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`)
