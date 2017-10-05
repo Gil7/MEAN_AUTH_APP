@@ -1,3 +1,22 @@
-<p>
-  login works!
-</p>
+<h2 class="page-header text-center">Login</h2>
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3 col-xs-12">
+        <form (submit)="onLoginSubmit()">
+                <div class="form-group">
+                    <label for="usernamme"><i class="fa fa-user"></i> Username</label>
+                    <input type="text" class="form-control" name="username" [(ngModel)]="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="usernamme"><i class="fa fa-unlock"></i> Password</label>
+                    <input type="text" class="form-control" name="password" [(ngModel)]="password" required>
+                </div>    
+                <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-sign-in"></i>
+                            Login
+                </button>
+                <hr>
+                <a [routerLink]="['/register']">Register</a>
+            </form>
+    </div>
+</div>
